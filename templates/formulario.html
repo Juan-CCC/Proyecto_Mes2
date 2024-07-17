@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vida Promedio</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div class="flex justify-center items-center min-h-screen">
+        <form id="formulario" onsubmit="clasificarPaciente(event)" class="bg-white shadow-lg rounded-lg p-8 max-w-md w-full">
+            <h2 class="text-2xl font-bold mb-4 text-center">Calculadora de Esperanza de Vida</h2>
+            <div class="mb-4">
+                <label for="Schooling" class="block text-gray-700 text-sm font-bold mb-2">Promedio de años de escolaridad</label>
+                <input 
+                    type="number" 
+                    id="Schooling" 
+                    name="Schooling"
+                    step="0.01" 
+                    required
+                    class="border rounded px-3 py-2 w-full"
+                >
+            </div>
+            <div class="mb-4">
+                <label for="HIVAIDS" class="block text-gray-700 text-sm font-bold mb-2">Tasa de prevalencia del VIH/SIDA</label>
+                <input 
+                    type="number" 
+                    id="HIVAIDS" 
+                    name="HIVAIDS"
+                    step="0.01" 
+                    required
+                    class="border rounded px-3 py-2 w-full"
+                >
+            </div>
+            <div class="mb-4">
+                <label for="healthexppercapita" class="block text-gray-700 text-sm font-bold mb-2">Gasto en salud per cápita</label>
+                <input 
+                    type="number" 
+                    id="healthexppercapita" 
+                    name="healthexppercapita"
+                    step="0.01" 
+                    required
+                    class="border rounded px-3 py-2 w-full"
+                >
+            </div>
+            <div class="mb-4">
+                <label for="fertilityrate" class="block text-gray-700 text-sm font-bold mb-2">Tasa de fertilidad</label>
+                <input 
+                    type="number" 
+                    id="fertilityrate" 
+                    name="fertilityrate"
+                    step="0.01" 
+                    required
+                    class="border rounded px-3 py-2 w-full"
+                >
+            </div>
+            <button type="submit" class="w-full mt-4 bg-blue-500 text-white p-3 rounded-md hover:bg-blue-600 transition duration-200">Calcular Esperanza de Vida</button>
+            <p id="resultado" class="mt-4 text-center text-gray-700 font-semibold"></p>
+        </form>
+    </div>
+
+    <script>
+        function clasificarPaciente(event) {
+            event.preventDefault();
+
+            // Validar que todos los campos estén llenos
+            const Schooling = document.getElementById('Schooling').value;
+            const HIVAIDS = document.getElementById('HIVAIDS').value;
+            const healthexppercapita = document.getElementById('healthexppercapita').value;
+            const fertilityrate = document.getElementById('fertilityrate').value;
+
+            if (Schooling === '' || HIVAIDS === '' || healthexppercapita === '' || fertilityrate === '') {
+                document.getElementById('resultado').innerText = 'Por favor completa todos los campos.';
+                return;
+            }
+
+            // Enviar la solicitud fetch solo si todos los campos están llenos
+            fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `Schooling=${Schooling}&HIVAIDS=${HIVAIDS}&healthexppercapita=${healthexppercapita}&fertilityrate=${fertilityrate}`,
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    document.getElementById('resultado').innerText = 'Error: ' + data.error;
+                } else {
+                    document.getElementById('resultado').innerText = 'La Esperanza de vida es: ' + data.prediction;
+                }
+            })
+            .catch(error => {
+                document.getElementById('resultado').innerText = 'Error en la solicitud.';
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>
