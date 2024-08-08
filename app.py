@@ -23,18 +23,19 @@ def predict():
         # Obtener los datos enviados en el request
         Schooling = float(request.form['Schooling'])
         HIVAIDS = float(request.form['HIVAIDS'])
+        tuberculosis = float(request.form['tuberculosis'])
         healthexppercapita = float(request.form['healthexppercapita'])
         fertilityrate = float(request.form['fertilityrate'])
 
         # Verificar los datos recibidos
-        app.logger.debug(f'Schooling: {Schooling}, HIVAIDS: {HIVAIDS}, healthexppercapita: {healthexppercapita}, fertilityrate: {fertilityrate}')
+        app.logger.debug(f'Schooling: {Schooling}, HIVAIDS: {HIVAIDS}, tuberculosis: {tuberculosis}, healthexppercapita: {healthexppercapita}, fertilityrate: {fertilityrate}')
 
         input_data = pd.DataFrame({
             'Schooling': [Schooling],
             'HIV.AIDS': [HIVAIDS],
             'Status': [0],
             'wateraccess': [0],
-            'tuberculosis': [0],
+            'tuberculosis': [tuberculosis],
             'inflation': [0],
             'healthexppercapita': [healthexppercapita],
             'fertilityrate': [fertilityrate],
@@ -47,7 +48,7 @@ def predict():
         scaled_data = scaler.transform(input_data)
 
         # Seleccionar solo las características usadas para el modelo
-        scaled_data_for_prediction = scaled_data[:, [0, 1, 6, 7]]  # Asegúrate de que estos índices son correctos
+        scaled_data_for_prediction = scaled_data[:, [0, 1, 4, 6, 7]]  # Asegúrate de que estos índices son correctos
 
         # Realizar la predicción con los datos escalados
         prediccion = model.predict(scaled_data_for_prediction)

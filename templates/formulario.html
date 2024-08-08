@@ -33,12 +33,23 @@
                 >
             </div>
             <div class="mb-4">
+                <label for="tuberculosis" class="block text-gray-700 text-sm font-bold mb-2">Tasa de incidencia de tuberculosis</label>
+                <input 
+                    type="number" 
+                    id="tuberculosis" 
+                    name="tuberculosis"
+                    step="0.01" 
+                    required
+                    class="border rounded px-3 py-2 w-full"
+                >
+            </div>
+            <div class="mb-4">
                 <label for="healthexppercapita" class="block text-gray-700 text-sm font-bold mb-2">Gasto en salud per cápita</label>
                 <input 
                     type="number" 
                     id="healthexppercapita" 
                     name="healthexppercapita"
-                    step="0.01" 
+                    step="0.000001" 
                     required
                     class="border rounded px-3 py-2 w-full"
                 >
@@ -49,7 +60,7 @@
                     type="number" 
                     id="fertilityrate" 
                     name="fertilityrate"
-                    step="0.01" 
+                    step="0.001" 
                     required
                     class="border rounded px-3 py-2 w-full"
                 >
@@ -66,10 +77,11 @@
             // Validar que todos los campos estén llenos
             const Schooling = document.getElementById('Schooling').value;
             const HIVAIDS = document.getElementById('HIVAIDS').value;
+            const tuberculosis = document.getElementById('tuberculosis').value;
             const healthexppercapita = document.getElementById('healthexppercapita').value;
             const fertilityrate = document.getElementById('fertilityrate').value;
 
-            if (Schooling === '' || HIVAIDS === '' || healthexppercapita === '' || fertilityrate === '') {
+            if (Schooling === '' || HIVAIDS === '' || tuberculosis === '' || healthexppercapita === '' || fertilityrate === '') {
                 document.getElementById('resultado').innerText = 'Por favor completa todos los campos.';
                 return;
             }
@@ -80,7 +92,7 @@
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                body: `Schooling=${Schooling}&HIVAIDS=${HIVAIDS}&healthexppercapita=${healthexppercapita}&fertilityrate=${fertilityrate}`,
+                body: `Schooling=${Schooling}&HIVAIDS=${HIVAIDS}&tuberculosis=${tuberculosis}&healthexppercapita=${healthexppercapita}&fertilityrate=${fertilityrate}`,
             })
             .then(response => response.json())
             .then(data => {
